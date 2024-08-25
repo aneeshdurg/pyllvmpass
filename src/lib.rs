@@ -66,7 +66,6 @@ impl LlvmModulePass for PyLLVMPass {
             let mod_: &str = &self.module;
             let mod_ = PyModule::import_bound(py, mod_)?;
             let run_on_module = mod_.getattr("run_on_module")?;
-            // TODO import_bound("llvmcpy") and then convert raw_ptr into a llvmcpy.llvm.Module
             let res: i64 = run_on_module.call1((llvm_module,))?.extract()?;
             PyResult::Ok(res)
         });

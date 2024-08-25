@@ -1,13 +1,9 @@
-use std::collections::HashMap;
-
 use llvm_plugin::inkwell::module::Module;
-use llvm_plugin::inkwell::values::*;
 use llvm_plugin::{
     LlvmModulePass, ModuleAnalysisManager, PassBuilder, PipelineParsing, PreservedAnalyses,
 };
-
 use pyo3::prelude::*;
-use pyo3::types::{PyList, PyString};
+use std::process::Command;
 
 // A name and version is required.
 #[llvm_plugin::plugin(name = "pyllvmpass", version = "0.1")]
@@ -43,23 +39,39 @@ struct PyLLVMPass {
 
 impl LlvmModulePass for PyLLVMPass {
     fn run_pass(&self, module: &mut Module, _manager: &ModuleAnalysisManager) -> PreservedAnalyses {
+        // We need to get the contents of sys.path because PyO3 seems to have a more restrictive set
+        // of default entries in path (no current directory, no conda site pkgs, etc)
+        let pypath_out = Command::new("python")
+            .arg("-c")
+            .arg("import sys; print(sys.path)")
+            .output()
+            .expect("failed to get python path");
+        assert!(pypath_out.status.success());
+        let pypath = String::from_utf8(pypath_out.stdout).expect("failed to parse python path");
+
         let raw_ptr = module.as_mut_ptr();
         let py_res = Python::with_gil(|py| {
+            let path = py.eval_bound(&pypath, None, None)?;
             let sys = PyModule::import_bound(py, "sys")?;
-            let py_path: Bound<'_, PyList> = sys.getattr("path")?.downcast_into()?;
-            // TODO can PyO3 share the same default path as the system?
-            py_path.append("")?;
-            py_path.append("/home/aneesh/miniconda3/lib/python3.12/site-packages")?;
+            sys.setattr("path", path)?;
+
+            let cllvm = PyModule::import_bound(py, "llvmcpy.llvm")?;
+            let pyffi = cllvm.getattr("ffi")?;
+            let llvm_module_ptr = pyffi
+                .getattr("cast")?
+                .call1(("struct LLVMOpaqueModule *", raw_ptr as usize))?;
+            let cllvm_module_constructor = cllvm.getattr("Module")?;
+            let llvm_module = cllvm_module_constructor.call1((llvm_module_ptr,))?;
 
             let mod_: &str = &self.module;
             let mod_ = PyModule::import_bound(py, mod_)?;
             let run_on_module = mod_.getattr("run_on_module")?;
             // TODO import_bound("llvmcpy") and then convert raw_ptr into a llvmcpy.llvm.Module
-            let res: i64 = run_on_module.call1(raw_ptr as usize)?.extract()?;
+            let res: i64 = run_on_module.call1((llvm_module,))?.extract()?;
             PyResult::Ok(res)
-        })
-        .unwrap();
+        });
 
+        let py_res = py_res.expect("Failed to get value for PreservedAnalysis - If there are no errors below, check if the python module returns a value in all codepaths");
         if py_res == 0 {
             return PreservedAnalyses::All;
         }

@@ -8,12 +8,9 @@ modules to implement the pass.
 
 ```bash
 # Currently depends on llvm-18 being installed
+pip install llvmcpy
 git clone https://github.com/aneeshdurg/pyllvmpass
 cd pyllvmpass
-git clone https://github.com/revng/llvmcpy
-cd llvmcpy
-pip install .
-cd ..
 cargo build
 # Make sure that either LLVM_CONFIG is set in the environment or llvm-config is
 # on the PATH.

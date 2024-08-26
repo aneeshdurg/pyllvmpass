@@ -9,6 +9,7 @@ modules to implement the pass.
 ```bash
 # Currently depends on llvm-18 being installed
 git clone https://github.com/aneeshdurg/pyllvmpass
+cd pyllvmpass
 git clone https://github.com/revng/llvmcpy
 cd llvmcpy
 pip install .

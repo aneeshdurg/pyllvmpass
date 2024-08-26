@@ -70,7 +70,13 @@ impl LlvmModulePass for PyLLVMPass {
             PyResult::Ok(res)
         });
 
-        let py_res = py_res.expect("Failed to get value for PreservedAnalysis - If there are no errors below, check if the python module returns a value in all codepaths");
+        if let Err(ref x) = py_res {
+            Python::with_gil(|py| {
+                x.print_and_set_sys_last_vars(py);
+            });
+        }
+
+        let py_res = py_res.expect("Failed to get value for PreservedAnalysis - If there are no errors below, check if the python module returns a value in all codepaths\n");
         if py_res == 0 {
             return PreservedAnalyses::All;
         }

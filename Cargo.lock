@@ -55,8 +55,9 @@ checksum = "b248f5224d1d606005e02c97f5aa4e88eeb230488bcc03bc9ca4d7991399f2b5"
 
 [[package]]
 name = "inkwell"
-version = "0.4.0"
-source = "git+https://github.com/TheDan64/inkwell?rev=5c9f7fc#5c9f7fcbb0a667f7391b94beb65f1a670ad13221"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "40fb405537710d51f6bdbc8471365ddd4cd6d3a3c3ad6e0c8291691031ba94b2"
 dependencies = [
  "either",
  "inkwell_internals",
@@ -68,8 +69,9 @@ dependencies = [
 
 [[package]]
 name = "inkwell_internals"
-version = "0.9.0"
-source = "git+https://github.com/TheDan64/inkwell?rev=5c9f7fc#5c9f7fcbb0a667f7391b94beb65f1a670ad13221"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9dd28cfd4cfba665d47d31c08a6ba637eed16770abca2eccbbc3ca831fef1e44"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -90,8 +92,9 @@ checksum = "97b3888a4aecf77e811145cadf6eef5901f4782c53886191b2f693f24761847c"
 
 [[package]]
 name = "llvm-plugin"
-version = "0.5.0"
-source = "git+https://github.com/jamesmth/llvm-plugin-rs?rev=bf6b4d7#bf6b4d72b94df05c371f5cd13b53b30c87482246"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "15457da7fdf3847cabfb672c91ff40c8be8e145f1cfcaae3df4567d4e83e1e3e"
 dependencies = [
  "cc",
  "inkwell",
@@ -105,7 +108,8 @@ dependencies = [
 [[package]]
 name = "llvm-plugin-macros"
 version = "0.2.0"
-source = "git+https://github.com/jamesmth/llvm-plugin-rs?rev=bf6b4d7#bf6b4d72b94df05c371f5cd13b53b30c87482246"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb38702514d1a808b680135a6073470f57e4be5ca9f32ab1582062be452721ee"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -166,7 +170,6 @@ dependencies = [
 name = "pyllvmpass"
 version = "0.1.0"
 dependencies = [
- "either",
  "llvm-plugin",
  "pyo3",
 ]

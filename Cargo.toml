@@ -1,12 +1,19 @@
 [package]
 name = "pyllvmpass"
 version = "0.1.0"
+authors = ["Aneesh Durg <aneeshdurg17@gmail.com>"]
 edition = "2021"
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/aneeshdurg/pyllvmpass"
+repository = "https://github.com/aneeshdurg/pyllvmpass"
+description = "Shim for writing LLVM optimizer passes in python"
+keywords = ["compilers", "llvm", "python"]
+categories = ["compilers"]
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-llvm-plugin = { git = "https://github.com/jamesmth/llvm-plugin-rs", rev = "bf6b4d7", features = ["llvm18-0"] }
-either = "1.13.0"
+llvm-plugin = { version = "0.6", features = ["llvm18-0"] }
 pyo3 = { version = "0.22.2", features = ["auto-initialize"] }

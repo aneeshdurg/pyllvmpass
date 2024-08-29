@@ -20,8 +20,6 @@ fn plugin_registrar(builder: &mut PassBuilder) {
             manager.add_pass(PyLLVMPass {
                 module: module.to_string(),
             });
-            //manager.add_pass(GlobalVariablePointerRenamePass);
-
             // we notify the caller that we were able to parse
             // the given name
             PipelineParsing::Parsed

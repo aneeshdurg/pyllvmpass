@@ -10,11 +10,12 @@ use std::process::Command;
 fn plugin_registrar(builder: &mut PassBuilder) {
     // Add a callback to parse a name from the textual representation of the pipeline to be run.
     builder.add_module_pipeline_parsing_callback(|name, manager| {
-        if name.starts_with("pyllvmpass") {
-            assert!(name.len() > ("pyllvmpass".len() + 2));
-            assert!(name.as_bytes()["pyllvmpass".len()] == b'[');
+        let prefix = "pyllvmpass";
+        if name.starts_with(prefix) {
+            assert!(name.len() > (prefix.len() + 2));
+            assert!(name.as_bytes()[prefix.len()] == b'[');
             assert!(name.as_bytes()[name.len() - 1] == b']');
-            let module = &name[("pyllvmpass".len() + 1)..(name.len() - 1)];
+            let module = &name[(prefix.len() + 1)..(name.len() - 1)];
             // the input pipeline contains the name "custom-pass", so we add our custom pass to the
             // pass manager
             manager.add_pass(PyLLVMPass {

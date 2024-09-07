@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test PyLLVMPass
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "install rust"
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: "install llvm-18"
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod u+x llvm.sh
+          sudo ./llvm.sh 18
+          sudo ln -s /lib/x86_64-linux-gnu/libLLVM-18.so /lib/x86_64-linux-gnu/libLLVM.so
+
+      - name: "install python deps"
+        run: |
+          pip install pytest llvmcpy
+          # Initialize llvmcpy
+          LLVM_CONFIG=llvm-config-18 python -c "import llvmcpy.llvm as cllvm"
+
+      - name: "build"
+        run: |
+          cargo build
+
+      - name: "run tests"
+        run: |
+          cd test
+          LLVM_CONFIG=llvm-config-18 PYLLVM_PLUGIN_PATH=../target/debug/libpyllvmpass.so pytest

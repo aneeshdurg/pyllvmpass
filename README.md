@@ -55,7 +55,8 @@ def run_on_module(module: Module) -> int:
     ...
 ```
 
-Currently only ModulePasses are supported.
+Currently only ModulePasses are supported. See the [test](test/) directory for examples that
+transform the IR.
 
 ## Why does this exist?
 

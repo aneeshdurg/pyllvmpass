@@ -54,7 +54,7 @@ impl LlvmModulePass for PyLLVMPass {
             let sys = PyModule::import_bound(py, "sys")?;
             sys.setattr("path", path)?;
 
-            let cllvm = PyModule::import_bound(py, "llvmcpy.llvm")?;
+            let cllvm = PyModule::import_bound(py, "llvmcpy.llvm").expect("Could not find llvmcpy");
             let pyffi = cllvm.getattr("ffi")?;
             let llvm_module_ptr = pyffi
                 .getattr("cast")?
@@ -64,7 +64,7 @@ impl LlvmModulePass for PyLLVMPass {
 
             let mod_: &str = &self.module;
             let mod_ = PyModule::import_bound(py, mod_)?;
-            let run_on_module = mod_.getattr("run_on_module")?;
+            let run_on_module = mod_.getattr("run_on_module").expect("Could not find function run_on_module - please supply a valid PyLLVMPass module");
             let res: i64 = run_on_module.call1((llvm_module,))?.extract()?;
             PyResult::Ok(res)
         });

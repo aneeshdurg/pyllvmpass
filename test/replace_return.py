@@ -2,6 +2,7 @@
 
 from llvmcpy import LLVMCPy
 
+
 def run_on_module(module):
     cllvm = LLVMCPy()
 

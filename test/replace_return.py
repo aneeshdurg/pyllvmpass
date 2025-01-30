@@ -1,8 +1,10 @@
 """LLVM Module pass that replace all return statements with `return 1`"""
 
-import llvmcpy.llvm as cllvm
+from llvmcpy import LLVMCPy
 
-def run_on_module(module: cllvm.Module):
+def run_on_module(module):
+    cllvm = LLVMCPy()
+
     ctx = module.get_context()
     i32_t = ctx.int32_type()
     # constant i32(1)

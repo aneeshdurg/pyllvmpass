@@ -22,12 +22,13 @@ jobs:
           chmod u+x llvm.sh
           sudo ./llvm.sh 18
           sudo ln -s /lib/x86_64-linux-gnu/libLLVM-18.so /lib/x86_64-linux-gnu/libLLVM.so
+          sudo ln -s $(llvm-config-18 --libdir)/libLLVM-18.so $(llvm-config-18 --libdir)/libLLVM.so
 
       - name: "install python deps"
         run: |
           pip install pytest llvmcpy
           # Initialize llvmcpy
-          LLVM_CONFIG=llvm-config-18 python -c "import llvmcpy.llvm as cllvm"
+          LLVM_CONFIG=llvm-config-18 python -c "from llvmcpy import LLVMCPy; llvm = LLVMCPy()"
 
       - name: "build"
         run: |

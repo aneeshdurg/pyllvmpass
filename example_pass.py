@@ -1,4 +1,6 @@
-import llvmcpy.llvm as cllvm
+from llvmcpy import LLVMCPy
+
+cllvm = LLVMCPy()
 
 def run_on_module(m: cllvm.Module):
     print("hello from python!")

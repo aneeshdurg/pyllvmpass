@@ -38,8 +38,10 @@ a thin wrapper around the LLVM C API.
 
 For our example in `example_pass.py`, we could do the following:
 ```python
-from llvmcpy.llvm import Module
-def run_on_module(module: Module) -> int:
+from llvmcpy import LLVMCPy
+cllvm = LLVMCPy()
+
+def run_on_module(module: cllvm.Module) -> int:
     print("hello from python!")
     src = module.print_module_to_string().decode()
     # Print the llvm IR
